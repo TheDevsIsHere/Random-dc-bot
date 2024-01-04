@@ -1,9 +1,11 @@
-# This example requires the 'message_content' privileged intents
-
 import os
 import discord
 from discord.ext import commands
 
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+if not BOT_TOKEN:
+    raise ValueError("Error: BOT_TOKEN variable is not set.")
+    exit(1)
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -14,6 +16,11 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 async def on_ready():
     print(f"Logged in as {bot.user}")
 
+@bot.event
+async def on_error(event, *args, **kwargs):
+    # Implement error handling logic here
+    print(f"An error occurred during {event}: {sys.exc_info()}")
+
 @bot.command()
 async def ping(ctx):
     await ctx.send('pong')
@@ -22,5 +29,5 @@ async def ping(ctx):
 async def hello(ctx):
     await ctx.send("Choo choo! 🚅")
 
-
-bot.run(os.environ["OTc2NTQwMTQyNzcwNzQ5NDkx.GBgXAZ.NmNNk2KId1mZzPJ2zyV6nMUUCsUpaDCjEKFMtI"])
+if __name__ == "__main__":
+    bot.run(BOT_TOKEN)
